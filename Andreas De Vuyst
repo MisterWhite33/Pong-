@@ -1,0 +1,155 @@
+// PONG by Andreas De Vuyst. 
+// Juego Pong.
+// Una pelota rebota con las barras por la deteccion del mouse
+
+
+Pelota myPelota;
+
+
+void setup() {   
+
+  size(800, 600);   
+  noCursor();  
+  
+  myPelota = new Pelota(color(255),width/2,height/2,3,20,0,0);
+  // objecto de la clase Pelota y sus propiedades
+  // color, posicion X, posicion Y, velocidad, diametro, velocidad en x, velocidad en y
+
+ 
+}
+
+void draw() {
+  background(0); 
+  myPelota.move();    // funcion para que se mueva la pelota y para
+                      // detectar la colision con el escenario y que
+                      // cambie de direccion
+                      
+  myPelota.display(); // funcion para que se dibuje la pelota
+
+  myPelota.Bar();     // funcion para dibujar las barras y 
+                      // establecer los limites de las barras
+                      // para detectar la colision con estas.
+                      // Suma puntos al lado que logro hacer que
+                      // la pelota pase.
+  
+}
+
+class Pelota{
+  
+  // Variables de la clase pelota
+  
+color c;
+float xPelota;
+float yPelota;
+float V;
+float diametro;
+float vPelotax;     
+float vPelotay; 
+
+int pizq = 0;
+int pder = 0;
+
+Pelota(color tC, float tpX, float tpY, float tsp, float tdi, float tvx, float tvy){
+
+  // Variables temporales del objeto Pelota
+  
+ c = tC;
+ xPelota = tpX;
+ yPelota = tpY;
+ V = tsp;
+ diametro = tdi;
+ vPelotax = tvx;     
+ vPelotay = tvy; 
+   vPelotax = V;     
+   vPelotay = V; 
+}
+
+
+  void display(){  // Dibuja la pelota
+  fill(c);
+  ellipse(xPelota,yPelota,diametro,diametro);
+
+}
+
+  void move(){
+  
+  xPelota = xPelota + vPelotax;   
+  yPelota = yPelota + vPelotay;    
+  
+  
+  //limite inferior en y
+  if(yPelota>height) {   
+     vPelotay = -V;   
+}      
+
+  //limite inferior en y
+  if(yPelota<0) {   
+     vPelotay = V;   
+}     
+
+//Reinicio Izquierda
+
+
+  if(xPelota<0) {   // cuando la pelota llega a la izquierda
+                    // se reinicia desde la mitad de la pantalla
+     xPelota = width/2;   
+     yPelota = height/2;   
+     V=2;
+     vPelotax = V;
+     vPelotay = V;
+     
+     // Puntos DER. Le da un punto al lado derecho
+     // cuando la pelota llega al lado izquierdo
+     pder += 1;
+     println("IZQ: "+pizq+" - DER: "+pder);
+     
+}   
+
+//Reinicio Derecha
+
+
+ if(xPelota>width) {   // cuando la pelota llega a la derecha
+                       // se reinicia desde la mitad de la pantalla
+     xPelota = width/2;   
+     yPelota = height/2;   
+     V=2;
+     vPelotax = V;
+     vPelotay = V;
+     
+     // Puntos IZQ. Le da un punto al lado izquierdo
+     // cuando la pelota llega al lado derecho
+     pizq += 1;
+     println("IZQ: "+pizq+" - DER: "+pder);
+}   
+  
+  
+  }
+  
+  //funcion de clase para barra
+  void Bar(){
+    
+    
+    // variable que invierrte la direccion de la barra derecha
+    float by;
+    by = ((mouseY)*(-1))+height;
+    
+    // barra izquierda
+      rect(10, mouseY-40, 10, 100); // esta linea dibuja la barra 
+        // Colision barra izq. Colision detectada por la posicion del mouse
+      if(xPelota<25 && yPelota>mouseY-50 && yPelota<mouseY+50) { 
+        V = V+.2;
+     vPelotax = V;   
+}  
+      // Barra Derecha
+      rect(780, by, 10, 100); // esta linea dibuja la barra
+        // Colision Barra der. Colision detectada por la posicion del mouse
+      if(xPelota>775 && yPelota>by && yPelota<by+100) { 
+        V = V+.2;
+     vPelotax = -V;
+     //println(xPelota+" "+yPelota);
+     //println("barra 2"+by);
+      }
+  
+}
+  
+}
